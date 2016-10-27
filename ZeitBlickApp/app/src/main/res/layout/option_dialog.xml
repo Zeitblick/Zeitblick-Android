@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/social_link_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp">
+
+        <ImageButton
+            android:id="@+id/ib_social_facebook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginLeft="130dp"
+            android:background="@drawable/ic_action_facebook"/>
+
+        <ImageButton
+            android:id="@+id/ib_social_twitter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/ic_twitter"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toEndOf="@+id/ib_social_facebook" />
+
+       <!-- <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/ib_social_twitter"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/ic_twitter"
+            android:layout_toLeftOf="@id/ib_social_instagramm"
+            android:layout_toRightOf="@id/ib_social_facebook"
+            app:civ_border_color="@color/borderColor"
+            app:civ_border_width="2dp" />-->
+
+        <ImageButton
+            android:id="@+id/ib_social_instagramm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:background="@drawable/ic_instagram"
+            android:layout_toEndOf="@+id/ib_social_twitter"
+            android:layout_marginLeft="20dp"
+            android:layout_alignParentTop="true" />
+
+
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <!-- Present_photo_fragment -->
+    <dimen name="title_present_fragment">18sp</dimen>
+    <dimen name="los_gehts_present_fragment">20sp</dimen>
+    <dimen name="nochmal_present_fragment">16sp</dimen>
+
+
+    <!-- Present_result_fragment -->
+    <dimen name="text_result_fragment">46sp</dimen>
+
+</resources>

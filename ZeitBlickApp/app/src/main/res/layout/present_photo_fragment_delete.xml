@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- //todo ce fragment devrait etre en immersive mode -->
+
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary">
+
+
+    <!-- Titre "zeitblick" //todo ecrit en italique -->
+    <TextView
+        android:text="@string/present_photo_fragment_zeitblick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/tv_zeitblick"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textStyle="italic"
+        android:textColor="@color/colorAccent"
+        android:textSize="@dimen/title_present_fragment"
+        android:typeface="serif"/>
+
+    <!-- //todo cadre blanc -->
+    <com.github.siyamed.shapeimageview.RoundedImageView
+        android:layout_width="255dp"
+        android:layout_height="255dp"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:id="@+id/iv_taken_photo"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_zeitblick"
+        android:padding="15dp"
+        app:siRadius="60dp"
+        app:siBorderWidth="60dp"
+        app:siBorderColor="@color/textColor"
+        app:siSquare="true"/>
+
+    <!-- Button to continue //todo Ce bouton doit etre rond, fond noir, lisierere blanche-->
+    <Button
+        android:text="@string/present_photo_fragment_los_gehts"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:id="@+id/btt_los_gehts"
+        android:layout_marginTop="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/iv_taken_photo"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/los_gehts_present_fragment"
+        android:background="@drawable/roundedbutton"
+        android:textAllCaps="false"/>
+
+    <!-- Button to take a photo again -->
+    <Button
+        android:text="@string/present_photo_fragment_nochmal"
+        style="?android:attr/borderlessButtonStyle"
+        android:textStyle="italic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btt_nochmal"
+        android:layout_marginStart="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/btt_los_gehts"
+        app:layout_constraintVertical_bias="0.52"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/nochmal_present_fragment"
+        android:textAllCaps="false"/>
+
+</android.support.constraint.ConstraintLayout>

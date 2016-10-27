@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- animation utilisee pour mettre au point une sequence d'images (mis de cote pour l'instant) -->
+<objectAnimator xmlns:android="http://schemas.android.com/apk/res/android"
+    android:valueFrom="0" android:valueTo="180" android:propertyName="rotationY" >
+</objectAnimator>

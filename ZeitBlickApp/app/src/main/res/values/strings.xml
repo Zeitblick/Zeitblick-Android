@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">ZeitBlickApp</string>
+
+
+    <string name="menu_item_intent_camera">Intent Camera</string>
+    <string name="menu_item_camera_2">Camera2 App</string>
+
+    <string name="take_photo_take_photo">Take Photo</string>
+    <string name="present_photo_fragment_los_gehts">los geht\'s</string>
+    <string name="present_photo_fragment_nochmal">Nochmal!</string>
+    <string name="present_photo_fragment_zeitblick">Zeitblick</string>
+
+    <string name="picture">Prend Picture!!</string>
+    <string name="description_info">Info</string>
+    <string name="request_permission">This sample needs camera permission.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="switch_camera">This button switches the camera.</string>
+    <string name="set_camera_flash">This button sets the flash for the camera.</string>
+
+</resources>

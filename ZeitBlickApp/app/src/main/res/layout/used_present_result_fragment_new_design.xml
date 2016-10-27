@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/intro_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:layout_gravity="center"/>
+
+
+    <ImageView
+        android:id="@+id/iv_matching_mkg_photo"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:background="@drawable/used_animation_intro" />
+
+    <!-- layout bas de page (bouton information + photo + bouton "+" -->
+    <FrameLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_taken_photo"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
+
+        <!-- Button information -->
+        <ImageButton
+            android:id="@+id/btt_information"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="start|center_vertical"
+            android:background="@android:color/transparent"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:layout_marginLeft="50dp"
+            app:srcCompat="@drawable/ic_info_outline_48px" />
+
+<!--        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/btt_information"
+            android:layout_width="76dp"
+            android:layout_height="76dp"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="start|center_vertical"
+            app:srcCompat="@drawable/ic_mon_information_76_dp"
+            android:layout_marginLeft="30dp"
+            app:civ_border_color="@color/borderColor"
+            app:civ_border_width="2dp" />-->
+
+
+
+        <!-- Button "+" -->
+        <ImageButton
+            android:id="@+id/btt_options"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="50dp"
+            android:layout_toRightOf="@id/iv_thumbnail_taken_photo"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/ic_plus_circle_outline"/>
+
+<!--        <ImageButton
+            android:id="@+id/btt_options"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="30dp"
+            android:layout_toRightOf="@id/iv_thumbnail_taken_photo"
+            android:adjustViewBounds="true"
+            android:background="@android:color/holo_orange_light"
+            android:cropToPadding="false"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/ic_mon_plus_circle_76"/>-->
+
+
+        <!-- Thumbnail with taken photo -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_thumbnail_taken_photo"
+            android:layout_width="98dp"
+            android:layout_height="89dp"
+            android:layout_gravity="center|bottom"
+            android:layout_toLeftOf="@id/btt_options"
+            android:layout_toRightOf="@id/btt_information"
+            app:civ_border_color="@color/borderColor"
+            app:civ_border_width="2dp" />
+    </FrameLayout>
+</FrameLayout>
