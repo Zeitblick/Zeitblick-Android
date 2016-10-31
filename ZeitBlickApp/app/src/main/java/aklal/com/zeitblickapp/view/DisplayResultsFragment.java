@@ -104,6 +104,8 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
         //Set taken photo in a circle view
         mIvSubmittedPhoto.setImageURI(mSelfieUri);
+        // Image coming from Front Camera has to be flipped
+        mIvSubmittedPhoto.setRotationY(180);
 
         // anime une sequence d'images, ok mais pas configurable
         mWaitingAnimation = (AnimationDrawable) ivMatchingMkgPhoto.getBackground();
@@ -125,19 +127,16 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     public void displayProgress(boolean active) {
     }
 
-
-
     @Override
     public void displayTextResult(String results) {
     }
-
-
 
     @Override
     public void displaySimilarPhoto(Uri uri) {
         Log.i(TAG, "displaySimilarPhoto: URI TO DISPLAY: " + uri);
         ivMatchingMkgPhoto.setImageURI(uri);
     }
+
 
     @Override
     public void displaySimilarPhoto(String name) {
@@ -225,6 +224,7 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
         Toast.makeText(mContext, "Something blöd happened, try again", Toast.LENGTH_LONG).show();
     }
+
 
     @Override
     public void displayPrevPhoto() {
