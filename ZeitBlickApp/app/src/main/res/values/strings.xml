@@ -17,4 +17,11 @@
     <string name="switch_camera">This button switches the camera.</string>
     <string name="set_camera_flash">This button sets the flash for the camera.</string>
 
+
+    <string name="text_icon_intro">Zeitblick</string>
+    <string name="text_present_photo_abbort">Nochmal</string>
+    <string name="text_present_photo_accept">Los gehts</string>
+
+
+
 </resources>

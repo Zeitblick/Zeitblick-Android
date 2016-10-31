@@ -72,14 +72,9 @@ public class ZeitBlickApiImpl {
             public void onResponse(Call<Bild> call, Response<Bild> response) {
 
                 if (response.isSuccessful()) {
-                    //TODO: 20.10.16 line to delete
-                    Log.i(TAG, "onResponse: response:: " + response.code());
-
                     // Pass name photo to presenter
                     mPresenter.retrieveMatchingPhotoName(response.body().getInventoryNo());
                 } else {
-                    //TODO: 20.10.16 line to delete
-                    Log.i(TAG, "onResponse: response: ERROR " );
                     mPresenter.displayErrorPicture();
                     //todo implementer un mecanisme comme riggaroo:
                     //https://riggaroo.co.za/retrofit-2-mocking-http-responses/
@@ -88,10 +83,7 @@ public class ZeitBlickApiImpl {
 
             @Override
             public void onFailure(Call<Bild> call, Throwable t) {
-
                 //todo on Failure a particular photo with text must be displayed
-
-                //todo: Olivier: line to delete
                 Log.d(TAG, "onResponse: ERROR");
             }
         });

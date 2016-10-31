@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -33,7 +33,7 @@ import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Created by oliver on 10.10.16.
+ * Created by Aklal on 10.10.16.
  */
 public class DisplayResultsFragment extends Fragment implements PresenterViewContract.View {
 
@@ -55,7 +55,6 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     @BindView(R.id.progress_bar)
     ProgressBar mProgressBar;
 
-
     private Unbinder unbinder;
 
     private Uri mSelfieUri;
@@ -65,10 +64,6 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     private PresenterViewContract.Operations mAnalysisPresenter;
 
     public static DisplayResultsFragment newInstance(Uri selfieUri) {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "newInstance");
-
         Bundle args = new Bundle();
         args.putString(URI_TO_SELFIE, selfieUri.toString());
 
@@ -96,16 +91,13 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
         // call presenter
         mAnalysisPresenter.analysePhoto();
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onCreate - Uri: " + mSelfieUri);
     }
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.used_present_result_fragment_new_design, container, false);
+        View view = inflater.inflate(R.layout.present_result_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mIvSubmittedPhoto = (CircleImageView) view.findViewById(R.id.iv_thumbnail_taken_photo);
@@ -131,11 +123,6 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
     @Override
     public void displayProgress(boolean active) {
-        //info code pris de Udacity Material Design
-        //TODO: 10.10.16 create correct looping animation
-/*        AnimatedVectorDrawable drawable = full ? emptyHeart : fillHeart;
-        ivMatchingMkgPhoto.setImageDrawable(drawable);
-        drawable.start();*/
     }
 
 
@@ -216,9 +203,9 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
         //info: to let the image be full screen
         //http://stackoverflow.com/questions/24463691/how-to-show-imageview-full-screen-on-imageview-click
         ivMatchingMkgPhoto.setLayoutParams(
-                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT));
-        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT));
+        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
     @Override
@@ -232,8 +219,8 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
         ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(R.drawable.error));
         ivMatchingMkgPhoto.setLayoutParams(
-                new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
-                        FrameLayout.LayoutParams.MATCH_PARENT));
+                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT));
         ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
 
         Toast.makeText(mContext, "Something blöd happened, try again", Toast.LENGTH_LONG).show();

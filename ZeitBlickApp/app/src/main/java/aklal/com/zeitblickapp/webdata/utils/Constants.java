@@ -9,6 +9,5 @@ public class Constants {
      * URL of the server
      */
     public static final String SERVER_URL = "https://projekt-lisa.appspot.com";
-//    public static final String TOKEN_PATH = "/oauth/token";
 
 }

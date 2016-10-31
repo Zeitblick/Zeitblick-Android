@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,9 +21,8 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
- * Created by oliver on 08.10.16.
+ * Created by Aklal on 08.10.16.
  */
-
 public class PresentPhotoFragment extends Fragment {
 
     public interface OnAnalysisLaunchedListener{
@@ -39,10 +37,7 @@ public class PresentPhotoFragment extends Fragment {
     private static final String SELFIE_URI = "SELFIE_URI";
     private Uri mSelfieUri;
 
-
-//    private com.github.siyamed.shapeimageview.RoundedImageView mImageViewSelfie;
     private ImageView mImageViewSelfie;
-
 
     public static PresentPhotoFragment newInstance(Uri uriSelfie) {
         Bundle args = new Bundle();
@@ -59,18 +54,13 @@ public class PresentPhotoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         mSelfieUri = Uri.parse(getArguments().getString(SELFIE_URI));
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onCreate - MSELFIEURI = " + mSelfieUri);
     }
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        View view = inflater.inflate(R.layout.present_photo_fragment_frame_layout_delete, container, false);
-        View view = inflater.inflate(R.layout.used_present_photo_fragment_new_design, container, false);
-
+        View view = inflater.inflate(R.layout.present_photo_fragment, container, false);
 
         // Hide appbar/action bar
         ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
@@ -85,23 +75,21 @@ public class PresentPhotoFragment extends Fragment {
         newUiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(newUiOptions);
 
-
         mImageViewSelfie = (ImageView) view.findViewById(R.id.iv_taken_photo);
 
         //info: to let the image be full screen
-        //http://stackoverflow.com/questions/24463691/how-to-show-imageview-full-screen-on-imageview-click
         mImageViewSelfie.setLayoutParams(
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.MATCH_PARENT));
-        mImageViewSelfie.setScaleType(ImageView.ScaleType.FIT_XY);
-
+        mImageViewSelfie.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
         unbinder = ButterKnife.bind(this, view);
 
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onCreateView - uri de la photo prise recue en arg: " + mSelfieUri);
-
+        // Display photo
         mImageViewSelfie.setImageURI(mSelfieUri);
+
+        // Image coming from Front Camera has to be flipped
+        mImageViewSelfie.setRotationY(180);
 
         return view;
     }
@@ -112,22 +100,14 @@ public class PresentPhotoFragment extends Fragment {
         super.onDestroyView();
     }
 
-
-
     @OnClick(R.id.btt_los_gehts)
-    public void selfieAccepted(View view){
-        //todo: Olivier: line to delete
-        Log.d(TAG, "selfieAccepted - Selfie has been accepted!! It's time to go on the cloud!!");
-
+    public void selfieAccepted(){
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.onAnalysisLaunched(mSelfieUri);
     }
 
     @OnClick(R.id.btt_nochmal)
-    public void selfieRejected(View view){
-        //todo: Olivier: line to delete
-        Log.d(TAG, "selfieAccepted - Selfie has been rejected!! May be do we want to take a new one?");
-
+    public void selfieRejected(){
         deleteSelfie();
 
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -135,12 +115,10 @@ public class PresentPhotoFragment extends Fragment {
     }
 
 
-    //TODO: 10.10.16 Ceci devrait etre fait dans un presenter car par directement liée à l'UI
+    /**
+     * Delete Selfie if user decide to take another instead of vizualising matchin photo
+     */
     private void deleteSelfie() {
-        // Je pense que si le MediaContent était informé de l'existence de mon selfie, je
-        // pourrai appeler: getActivity().getContentResolver().delete(mSelfieUri, null, null);
-
-        // comme ce n'est pas le cas je fais:
         File file = new File(mSelfieUri.getPath());
         file.delete();
         if(file.exists()){
@@ -154,7 +132,4 @@ public class PresentPhotoFragment extends Fragment {
             }
         }
     }
-
-
-
 }

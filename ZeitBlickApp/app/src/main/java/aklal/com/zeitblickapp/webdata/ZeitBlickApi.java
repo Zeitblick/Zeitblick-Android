@@ -10,7 +10,7 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 
 /**
- * Created by oliver on 12.10.16.
+ * Created by Aklal on 12.10.16.
  */
 
 public interface ZeitBlickApi {

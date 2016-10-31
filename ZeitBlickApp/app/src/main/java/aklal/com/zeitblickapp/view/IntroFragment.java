@@ -1,8 +1,7 @@
 package aklal.com.zeitblickapp.view;
 
-import android.animation.AnimatorInflater;
-import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import aklal.com.zeitblickapp.R;
-import aklal.com.zeitblickapp.view.util.CreditsDialogFragment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -29,7 +28,6 @@ import static com.nostra13.universalimageloader.core.ImageLoader.TAG;
 /**
  * Created by Aklal on 23.10.16.
  */
-
 public class IntroFragment extends Fragment {
 
     Unbinder unbinder;
@@ -40,11 +38,12 @@ public class IntroFragment extends Fragment {
     @BindView(R.id.btt_information_intro)
     ImageButton mIbInfoIntro;
 
+    @BindView(R.id.tv_app_name)
+    TextView mTvAppName;
+
+    private Typeface mACaslonItalicText;
+
     public static IntroFragment newInstance() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "newInstance");
-
         IntroFragment fragment = new IntroFragment();
         return fragment;
     }
@@ -52,6 +51,7 @@ public class IntroFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        mACaslonItalicText = Typeface.createFromAsset(getActivity().getAssets(), "ACaslonPro-Italic.ttf");
     }
 
     @Override
@@ -59,11 +59,10 @@ public class IntroFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.used_intro_fragment, container, false);
+        View view = inflater.inflate(R.layout.intro_fragment, container, false);
 
         unbinder = ButterKnife.bind(this, view);
 
@@ -82,7 +81,10 @@ public class IntroFragment extends Fragment {
 
         mIbInfoIntro.bringToFront();
 
-        // ok mais pas configurable
+        //TODO: 29.10.16 should this be rather an icon ?
+        mTvAppName.setTypeface(mACaslonItalicText);
+
+        // animate png in sequence //todo it is ok but can surely be better
         ((AnimationDrawable) mIvAnimated.getBackground()).start();
 
         return view;
@@ -91,16 +93,11 @@ public class IntroFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-
         super.onDestroyView();
     }
 
     @OnClick(R.id.intro_layout)
     public void onClick() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onClick on INTRO FRAGMENT");
-
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, TakePhotoFragment.newInstance()).commit();
     }
@@ -111,5 +108,4 @@ public class IntroFragment extends Fragment {
         CreditsDialogFragment creditsDialogFragment = CreditsDialogFragment.newInstance("Credits");
         creditsDialogFragment.show(fm, DISPLAY_CREADITS_FRAGMENT_TAG);
     }
-
 }

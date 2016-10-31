@@ -10,6 +10,8 @@
 
 
     <!-- Present_result_fragment -->
-    <dimen name="text_result_fragment">46sp</dimen>
+    <dimen name="text_result_fragment">46sp</dimen><!--Not used-->
+    <dimen name="text_icon_intro_fragment">24sp</dimen>
+    <dimen name="text_present_fragment">16sp</dimen>
 
 </resources>

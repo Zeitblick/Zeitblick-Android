@@ -1,7 +1,7 @@
 package aklal.com.zeitblickapp.view.util;
 
 /**
- * Created by oliver on 10.10.16.
+ * Created by Aklal on 10.10.16.
  */
 
 public final class ConstantTag {

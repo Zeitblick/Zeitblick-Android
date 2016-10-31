@@ -1,99 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<!-- //todo ce fragment devrait etre en immersive mode avec un burger menu/navigation drawer -->
-
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/intro_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryDark">
+    android:layout_height="match_parent">
 
-    <!-- All matching photo from Mkg-->
-    <ImageView
-        android:layout_width="281dp"
-        android:layout_height="311dp"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/iv_matching_mkg_photo"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:background="@android:color/transparent"
-        tools:layout_editor_absoluteY="89dp" />
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:indeterminate="true" />
 
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-    <!-- Thumbnail from taken photo
-    //todo thumbnail de la photo prise, doit etre rond avec brodure blanche-->
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="98dp"
-        android:layout_height="89dp"
-        android:id="@+id/iv_thumbnail_taken_photo"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        android:layout_marginTop="64dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/frameLayout"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintVertical_bias="0.0"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@color/borderColor"/>
+            <!-- Display matching image ... or error image -->
+            <ImageView
+                android:id="@+id/iv_matching_mkg_photo"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:background="@drawable/used_animation_intro"/>
+        </LinearLayout>
+    </HorizontalScrollView>
 
-    <!-- //todo Text gros -->
-    <TextView
-        android:text="TextView"
-        android:layout_width="102dp"
-        android:layout_height="50dp"
-        android:id="@+id/textView"
-        android:textColor="@color/textColor"
-        android:textStyle="italic"
-        android:textSize="@dimen/text_result_fragment"
-        app:layout_constraintBottom_toTopOf="@+id/iv_matching_mkg_photo"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintVertical_bias="0.32999998" />
-
-
+    <!-- Bottom layout (information button + photo + button "+" -->
     <FrameLayout
-        android:layout_width="384dp"
-        android:layout_height="100dp"
-        tools:layout_editor_absoluteX="0dp"
-        android:background="#686550"
-        android:id="@+id/frameLayout"
-        tools:ignore="MissingConstraints"
-        android:layout_marginTop="456dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/iv_taken_photo"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"
+        android:orientation="horizontal">
 
+        <!-- Button information -->
+        <ImageButton
+            android:id="@+id/btt_information"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_gravity="start|center_vertical"
+            android:layout_marginLeft="50dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/ic_info_v2" />
+
+        <!-- Button "+" -->
+        <ImageButton
+            android:id="@+id/btt_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="end|center_vertical"
+            android:layout_marginRight="50dp"
+            android:adjustViewBounds="true"
+            android:background="@android:color/transparent"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            app:srcCompat="@mipmap/ic_plus_v2" />
+
+        <!-- Thumbnail with taken photo -->
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/iv_thumbnail_taken_photo"
+            android:layout_width="98dp"
+            android:layout_height="89dp"
+            android:layout_gravity="center|bottom"
+            android:layout_toLeftOf="@id/btt_options"
+            android:layout_toRightOf="@id/btt_information"
+            app:civ_border_color="@color/borderColor"
+            app:civ_border_width="2dp" />
     </FrameLayout>
-
-    <EditText
-        android:inputType="textMultiLine"
-        android:layout_width="278dp"
-        android:layout_height="78dp"
-        android:id="@+id/tv_result_cloud"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginStart="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toBottomOf="@+id/frameLayout"
-        android:background="@color/textColor"
-        android:textColor="@color/colorAccent"
-        android:layout_marginBottom="48dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintTop_toBottomOf="@+id/iv_matching_mkg_photo"
-        app:layout_constraintVertical_bias="0.95"
-        android:textSize="12sp"/>
-
-
-</android.support.constraint.ConstraintLayout>
+</FrameLayout>

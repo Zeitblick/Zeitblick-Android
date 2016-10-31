@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/intro_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- //todo hard coded dimension because we want a little icon ?-->
+    <!-- Button information -->
+    <ImageButton
+        android:id="@+id/btt_information_intro"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentLeft="true"
+        android:layout_gravity="start|top"
+        android:background="@android:color/transparent"
+        android:cropToPadding="false"
+        android:scaleType="centerCrop"
+        android:adjustViewBounds="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
+        app:srcCompat="@mipmap/ic_about_v3" />
+
+    <!-- present an animation -->
+    <ImageView
+        android:id="@+id/iv_animated_intro"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/used_animation_intro"/>
+
+
+    <!-- Icon and Name of the app -->
+    <LinearLayout
+        android:id="@+id/linearLayoutUp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginBottom="30dp">
+
+        <ImageView
+            android:id="@+id/iv_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            app:srcCompat="@drawable/ic_zeitblick_icon_64"
+            android:background="@android:color/transparent"
+            android:layout_marginStart="20dp"/>
+
+        <!-- //TODO This should be an svg icon not a textView -->
+        <TextView
+            android:id="@+id/tv_app_name"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:textStyle="italic"
+            android:typeface="serif"
+            android:textAllCaps="false"
+            android:layout_gravity="center_vertical|end"
+            android:textSize="@dimen/text_icon_intro_fragment"
+            android:textColor="@color/textColor"
+            android:text="@string/text_icon_intro"/>
+
+    </LinearLayout>
+
+
+    <include layout="@layout/camera_button_layout"/>
+
+</FrameLayout>

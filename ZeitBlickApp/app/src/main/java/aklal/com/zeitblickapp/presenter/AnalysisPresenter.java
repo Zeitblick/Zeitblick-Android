@@ -35,7 +35,7 @@ import aklal.com.zeitblickapp.webdata.provider.ZeitBlickApiImpl;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
- * Created by oliver on 09.10.16.
+ * Created by Aklal on 09.10.16.
  * <p>
  * Manage all non ui operations
  */
@@ -43,7 +43,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
 
     private static final String TAG = AnalysisPresenter.class.getSimpleName();
 
-    //    private static final String CLOUD_VISION_API_KEY = "AIzaSyDgS9KcrvoVZlsSShs8BaMDAtqIXiV_ohA";
     private static final String CLOUD_VISION_API_KEY = " AIzaSyAAaK5Pg209PEA2GBJGO8KEOnGzBr6PQm0 ";
     private static int MAX_SIZE_AFTER_COMPRESSION = 600;
 
@@ -85,7 +84,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
                                 MAX_SIZE_AFTER_COMPRESSION);
 
                 // ask google vision to analyse the photo
-//                callCloudVision(bitmap);
                 new VisionAnalysis().execute(bitmap);
 
             } catch (IOException e) {
@@ -100,10 +98,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
      * @param bitmap
      * @throws IOException
      */
-/*    private void callCloudVision(final Bitmap bitmap) throws IOException {
-        // Call to Google Vision is done in background
-        new VisionAnalysis().execute(bitmap);
-    }*/
     public Bitmap scaleBitmapDown(Bitmap bitmap, int maxDimension) {
 
         int originalWidth = bitmap.getWidth();
@@ -126,12 +120,9 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
 
 
     private HeadRotation returnHeadRotation(BatchAnnotateImagesResponse response) {
-
-        Log.i(TAG, "returnHeadRotation: response = " + response);
-
         HeadRotation headRotation = new HeadRotation();
 
-        String message = "returnHeadRotation: ";
+        String message = "return HeadRotation: ";
 
         List<FaceAnnotation> facemarks = response.getResponses().get(0)
                 .getFaceAnnotations();
@@ -168,14 +159,9 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
      * analyse it, then we ask our server if it has a photo with a similar
      * head rotation
      * <p>
-     * //todo REFACTOR: it is not correct that selfie anaylse and server to
-     * request are done with one call to analysePhotoOnGoogleVision!!
      */
     @Override
     public void analysePhoto() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "analysePhoto has been called!!");
         analysePhotoOnGoogleVision(mPhotoUri);
     }
 
@@ -186,7 +172,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
 
     @Override
     public void retrieveLoadedPhotoUri(Uri uri) {
-        Log.i(TAG, "retrieveLoadedPhotoUri: URI LOADED IMAGE = " + uri);
         mAnalysisView.displaySimilarPhoto(uri);
     }
 
@@ -199,7 +184,7 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
      */
     @Override
     public void retrieveMatchingPhotoName(String name) {
-        Log.i(TAG, "retrieveMatchingPhotoName: SIMILAIRE PHOTO= " + name);
+        Log.i(TAG, "retrieveMatchingPhotoName: SIMILARY PHOTO= " + name);
         mAnalysisView.displaySimilarPhoto(name);
     }
 
@@ -210,9 +195,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
     }
 
     private void getPhotoOnServerWithSimilarRotation(HeadRotation headrotation) {
-
-        Log.i(TAG, "getPhotoOnServerWithSimilarRotation: HeadRotation= " + headrotation.toString());
-
         zeitBlickController.getSimilarRotation(headrotation);
     }
 
@@ -220,9 +202,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
         @Override
         protected void onProgressUpdate(Boolean... values) {
             super.onProgressUpdate(values);
-
-            //todo: Olivier: line to delete
-            Log.d(TAG, "onProgressUpdate is called!!");
             mAnalysisView.displayProgress(mIsActive);
         }
 
@@ -305,8 +284,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
             mIsActive = false;
 
             long difference = System.currentTimeMillis() - startTime;
-
-            //todo: Olivier: line to delete
             Log.d(TAG, "onPostExecute - Reponse = " + result + "(" + difference / 1000 + " s)");
 
             getPhotoOnServerWithSimilarRotation(result);

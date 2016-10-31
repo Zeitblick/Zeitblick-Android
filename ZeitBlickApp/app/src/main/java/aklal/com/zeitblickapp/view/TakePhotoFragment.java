@@ -45,7 +45,6 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.io.File;
@@ -62,114 +61,36 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import aklal.com.zeitblickapp.R;
-import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 
 /**
- * Created by oliver on 08.10.16.
+ * Created by aklal on 08.10.16.
  *
  * Take photo using Camera2 Api
  */
-//warning JE PENSE M ETRE TROMPE ENTRE CE QUI EST LA CAMERA FRONT ET LA BACK!!! D'OU DES INCOHERENCE DANS LE NOM DES VARIABLES
 //info: FragmentCompat.OnRequestPermissionsResultCallback is the contract for receiving ..
 //info: .. the results for permission requests.
 public class TakePhotoFragment
-        extends Fragment implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
+
+        extends Fragment
+        implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
 
     private static final String TAG = TakePhotoFragment.class.getSimpleName();
-    private Unbinder unbinder;
-
-    //~ switch
-/*    @BindView(R.id.ibtt_switch_camera)
-    ImageButton mIbSwitchCamera;*/
-
-    // utilisés pour passer de la camera front a la back et reciproquement
-    Boolean isCameraToUseFront, isCameraToUseBack;
-
-    //~ switch
-    /*@OnClick(R.id.ibtt_switch_camera)
-    public void onSwitchButtonClicked(View view){
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onSwitchButtonClicked");
-
-
-        if(isCameraToUseBack == false){
-            isCameraToUseFront = false;
-            isCameraToUseBack = true;
-
-            mIsCameraBack = false;
-            mIsCameraFront = true;
-        } else{
-            isCameraToUseFront = true;
-            isCameraToUseBack = false;
-
-            mIsCameraBack = true;
-            mIsCameraFront = false;
-        }
-
-        // correspond au code de onPause
-        closeCamera();
-        stopBackgroundThread();
-
-
-        // correspond au code de onResume
-        startBackgroundThread();
-
-        // When the screen is turned off and turned back on, the SurfaceTexture is already
-        // available, and "onSurfaceTextureAvailable" will not be called. In that case, we can open
-        // a camera and start preview from here (otherwise, we wait until the surface is ready in
-        // the SurfaceTextureListener).
-        if (mTextureView.isAvailable()) {
-            openCamera(mTextureView.getWidth(), mTextureView.getHeight());
-        } else {
-            mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
-        }
-    }*/
-
-
-    public static TakePhotoFragment newInstance() {
-        Bundle args = new Bundle();
-
-        TakePhotoFragment fragment = new TakePhotoFragment();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //~ switch
-        isCameraToUseFront = true;
-        isCameraToUseBack = false;
-
-    }
-
-
-    @Override
-    public void onDestroyView() {
-        unbinder.unbind();
-        super.onDestroyView();
-    }
-
-
-    //INFO: 09.10.16 TOUT LE CODE QUI SUIT EST RESPONSABLE DE LA PRISE DE PHOTO PAR L'API CAMERA2
-    //TODO: 09.10.16 CE CODE DOIT ETRE MIS DANS UNE CLASSE UTIL
 
     /**
      * Conversion from screen rotation to JPEG orientation.
      */
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
+
     private static final int REQUEST_CAMERA_PERMISSION = 1;
+
+
     private static final String FRAGMENT_DIALOG = "dialog";
     /**
      * Tag for the {@link Log}.
-    /**
+     * /**
      * Camera state: Showing camera preview.
      */
     private static final int STATE_PREVIEW = 0;
@@ -177,6 +98,7 @@ public class TakePhotoFragment
      * Camera state: Waiting for the focus to be locked.
      */
     private static final int STATE_WAITING_LOCK = 1;
+
     /**
      * Camera state: Waiting for the exposure to be precapture state.
      */
@@ -197,9 +119,11 @@ public class TakePhotoFragment
      * Max preview height that is guaranteed by Camera2 API
      */
     private static final int MAX_PREVIEW_HEIGHT = 1080;
-    //~ methode pour verifier que je peux ecrire dans le storage
-    // Storage Permissions
-    private static final int REQUEST_EXTERNAL_STORAGE = 10;
+
+    //Name of the saved image
+    private String mfileName;
+    //Uri of the saves image
+    private Uri mSelfieUri;
 
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
@@ -207,7 +131,8 @@ public class TakePhotoFragment
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
-
+    Boolean isCameraToUseFront, isCameraToUseBack;
+    private Unbinder unbinder;
     /**
      * ID of the current {@link CameraDevice}.
      */
@@ -215,7 +140,6 @@ public class TakePhotoFragment
     /**
      * An {@link TextureView} for camera preview.
      */
-//    private AutoFitTextureView mTextureView;
     private TextureView mTextureView;
     /**
      * A {@link CameraCaptureSession } for camera preview.
@@ -245,8 +169,6 @@ public class TakePhotoFragment
      * This is the output file for our picture.
      */
     private File mFile;
-
-    private Boolean mIsCameraBack, mIsCameraFront;
     /**
      * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a
      * still image is ready to be saved.
@@ -260,6 +182,8 @@ public class TakePhotoFragment
         }
 
     };
+
+    private Boolean mIsCameraBack, mIsCameraFront;
     /**
      * {@link CaptureRequest.Builder} for the camera preview
      */
@@ -326,25 +250,18 @@ public class TakePhotoFragment
                     break;
                 }
 
-
                 case STATE_WAITING_LOCK: {
-                    //todo: Olivier: line to delete
-                    Log.d(TAG, "process");
-                    showToast("STATE_WAITING_LOCK");
+                    //showToast("STATE_WAITING_LOCK");
 
                     Integer afState = result.get(CaptureResult.CONTROL_AF_STATE);
                     if (afState == null) {
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "process");
-                        showToast("STATE_WAITING_LOCK, afState == null");
+                        //showToast("STATE_WAITING_LOCK, afState == null");
 
                         captureStillPicture();
                     } else if (CaptureResult.CONTROL_AF_STATE_FOCUSED_LOCKED == afState
                             || CaptureResult.CONTROL_AF_STATE_NOT_FOCUSED_LOCKED == afState) {
 
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "process");
-                        showToast("STATE_WAITING_LOCK, afState != null");
+                        //showToast("STATE_WAITING_LOCK, afState != null");
 
                         // CONTROL_AE_STATE can be null on some devices
                         Integer aeState = result.get(CaptureResult.CONTROL_AE_STATE);
@@ -412,9 +329,7 @@ public class TakePhotoFragment
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
 
-            //todo: Olivier: line to delete
-            Log.d(TAG, "onDisconnected: La cameradevice est deconnectée");
-            showToast("La cameradevice est deconnectée");
+            Log.d(TAG, "Camera device is deconnected");
 
             mCameraOpenCloseLock.release();
             cameraDevice.close();
@@ -433,11 +348,14 @@ public class TakePhotoFragment
         }
 
     };
-    //~ attribut pris de Android developpement cookbook
-    private String mfileName; //~ le nom de l'image sauvegardée
 
-    //~ attribut pour stocker Uri
-    private Uri mSelfieUri;
+    public static TakePhotoFragment newInstance() {
+        Bundle args = new Bundle();
+
+        TakePhotoFragment fragment = new TakePhotoFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     /**
      * Given {@code choices} of {@code Size}s supported by a camera, choose the smallest one that
@@ -493,6 +411,21 @@ public class TakePhotoFragment
         }
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        //~ switch
+        isCameraToUseFront = true;
+        isCameraToUseBack = false;
+
+    }
+
+    @Override
+    public void onDestroyView() {
+        unbinder.unbind();
+        super.onDestroyView();
+    }
 
     /**
      * Shows a {@link Toast} on the UI thread.
@@ -518,10 +451,10 @@ public class TakePhotoFragment
                              Bundle savedInstanceState) {
 
         // Hide appbar/action bar
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
 //        View view = inflater.inflate(R.layout.take_photo_fragment_linear_layout, container, false);
-        View view = inflater.inflate(R.layout.used_take_photo_fragment_new_design, container, false);
+        View view = inflater.inflate(R.layout.take_photo_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         mIsCameraBack = false;
         mIsCameraFront = false;
@@ -540,18 +473,17 @@ public class TakePhotoFragment
         return view;
     }
 
-
     @Override
     public void onViewCreated(final View view, Bundle savedInstanceState) {
         view.findViewById(R.id.bt_take_photo).setOnClickListener(this);
         mTextureView = (TextureView) view.findViewById(R.id.tv_take_photo);
     }
 
-
-
     @Override
     public void onResume() {
         super.onResume();
+
+
         startBackgroundThread();
 
         // When the screen is turned off and turned back on, the SurfaceTexture is already
@@ -560,6 +492,7 @@ public class TakePhotoFragment
         // the SurfaceTextureListener).
         if (mTextureView.isAvailable()) {
             openCamera(mTextureView.getWidth(), mTextureView.getHeight());
+
         } else {
             mTextureView.setSurfaceTextureListener(mSurfaceTextureListener);
         }
@@ -588,13 +521,15 @@ public class TakePhotoFragment
 
                 FragmentManager fm = getFragmentManager();
                 ErrorDialog.newInstance(getString(R.string.request_permission))
-                        /* ~ .show(getChildFragmentManager(), FRAGMENT_DIALOG);*/
                         .show(getFragmentManager(), FRAGMENT_DIALOG);
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
     }
+
+
+
 
     /**
      * Sets up member variables related to camera.
@@ -608,50 +543,20 @@ public class TakePhotoFragment
         try {
             for (String cameraId : manager.getCameraIdList()) {
 
-                //todo: Olivier: line to delete
-                Log.d(TAG, "setUpCameraOutputs - ID camera = " + cameraId);
-
                 CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
 
                 // We don't use a front facing camera in this sample.
                 Integer facing = characteristics.get(CameraCharacteristics.LENS_FACING);
-                /*Ce qui etait fait ds le code google*/
-/*                  if (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT) {
-                    continue;
-                }*/
 
-                //TODO: 28.09.16 Enable possibility to choose camera between BACK and FRONT
-                //~ we want to make a selfie so enable camera BACK
-/*                if (facing != null && facing == CameraCharacteristics.LENS_FACING_BACK) {
-
-                    mIsCameraBack = true;
-                    //todo: Olivier: line to delete
-                    Log.d(TAG, "setUpCameraOutputs - ID camera BACK = " + cameraId);
-                    continue;
-                } else {
-                    //todo: Olivier: line to delete
-                    Log.d(TAG, "setUpCameraOutputs - ID camera FRONT = " + cameraId);
-                }*/
-
-
-                //~ switch
-                //todo: Olivier: line to delete
-                Log.d(TAG, "setUpCameraOutputs + isCameraToUseBack = " + isCameraToUseBack);
-
-                //warning JE PENSE M ETRE TROMPE ENTRE CE QUI EST LA CAMERA FRONT ET LA BACK!!! D'OU DES INCOHERENCE DANS LE NOM DES VARIABLES
-                if ((isCameraToUseBack==false)&&(facing != null && facing == CameraCharacteristics.LENS_FACING_BACK)) {
+                if ((isCameraToUseBack == false) && (facing != null && facing == CameraCharacteristics.LENS_FACING_BACK)) {
 
                     mIsCameraBack = true;
                     mIsCameraFront = false;
-                    //todo: Olivier: line to delete
-                    Log.d(TAG, "setUpCameraOutputs (isCameraToUseBack = false) - ID camera BACK = " + cameraId);
                     continue;
-                } else if ((isCameraToUseFront==false)&&(facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT)) {
+                } else if ((isCameraToUseFront == false) && (facing != null && facing == CameraCharacteristics.LENS_FACING_FRONT)) {
 
                     mIsCameraFront = true;
                     mIsCameraBack = false;
-                    //todo: Olivier: line to delete
-                    Log.d(TAG, "setUpCameraOutputs - ID camera FRONT = " + cameraId);
                 }
 
 
@@ -681,27 +586,19 @@ public class TakePhotoFragment
 
                 switch (displayRotation) {
                     case Surface.ROTATION_0:
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "setUpCameraOutputs - SURFACE ROTATION = " + Surface.ROTATION_0);
 
                     case Surface.ROTATION_180:
                         if (mSensorOrientation == 90 || mSensorOrientation == 270) {
                             swappedDimensions = true;
                         }
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "setUpCameraOutputs - SURFACE ROTATION = " + Surface.ROTATION_180);
                         break;
 
                     case Surface.ROTATION_90:
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "setUpCameraOutputs - SURFACE ROTATION = " + Surface.ROTATION_0);
 
                     case Surface.ROTATION_270:
                         if (mSensorOrientation == 0 || mSensorOrientation == 180) {
                             swappedDimensions = true;
                         }
-                        //todo: Olivier: line to delete
-                        Log.d(TAG, "setUpCameraOutputs - SURFACE ROTATION = " + Surface.ROTATION_270);
                         break;
 
                     default:
@@ -740,23 +637,12 @@ public class TakePhotoFragment
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
 
-                //~ appel de methodes de AutoFitTexture
-               /* if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                    mTextureView.setAspectRatio(
-                            mPreviewSize.getWidth(), mPreviewSize.getHeight());
-                } else {
-                    mTextureView.setAspectRatio(
-                            mPreviewSize.getHeight(), mPreviewSize.getWidth());
-                }*/
-
                 // Check if the flash is supported.
                 Boolean available = characteristics.get(CameraCharacteristics.FLASH_INFO_AVAILABLE);
                 mFlashSupported = available == null ? false : available;
 
                 mCameraId = cameraId;
 
-                //todo: Olivier: line to delete
-                Log.d(TAG, "setUpCameraOutputs - Camera ID returned = " + mCameraId);
                 return;
             }
         } catch (CameraAccessException e) {
@@ -796,41 +682,25 @@ public class TakePhotoFragment
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera opening.", e);
         }
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "openCamera a été appelé!");
     }
 
     /**
      * Closes the current {@link CameraDevice}.
      */
     private void closeCamera() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "closeCamera");
-
         try {
             mCameraOpenCloseLock.acquire();
             if (null != mCaptureSession) {
                 mCaptureSession.close();
                 mCaptureSession = null;
-
-                //todo: Olivier: line to delete
-                Log.d(TAG, "closeCamera - mCaptureSession Nullify!");
             }
             if (null != mCameraDevice) {
                 mCameraDevice.close();
                 mCameraDevice = null;
-
-                //todo: Olivier: line to delete
-                Log.d(TAG, "closeCamera - mCameraDevice Nullify!");
             }
             if (null != mImageReader) {
                 mImageReader.close();
                 mImageReader = null;
-
-                //todo: Olivier: line to delete
-                Log.d(TAG, "closeCamera - mImageReader Nullify!");
             }
         } catch (InterruptedException e) {
             throw new RuntimeException("Interrupted while trying to lock camera closing.", e);
@@ -863,7 +733,6 @@ public class TakePhotoFragment
     }
 
 
-
     /**
      * Creates a new {@link CameraCaptureSession} for camera preview.
      */
@@ -879,7 +748,7 @@ public class TakePhotoFragment
             Surface surface = new Surface(texture);
 
 
-            /**~
+            /**
              * Create a request suitable for a camera preview window. Specifically, this means
              * that high frame rate is given priority over the highest-quality post-processing.
              * These requests would normally be used with the
@@ -921,9 +790,6 @@ public class TakePhotoFragment
                                         mCaptureCallback,
                                         mBackgroundHandler);
 
-                                //todo: Olivier: line to delete
-                                Log.d(TAG, "mCameraDevice.createCaptureSession - onConfigured a été appelée");
-
                             } catch (CameraAccessException e) {
                                 e.printStackTrace();
                             }
@@ -933,9 +799,6 @@ public class TakePhotoFragment
                         public void onConfigureFailed(
                                 @NonNull CameraCaptureSession cameraCaptureSession) {
                             showToast("Failed");
-
-                            //todo: Olivier: line to delete
-                            Log.d(TAG, "mCameraDevice.createCaptureSession - onConfigureFailed - la configuration de la session a failed");
                         }
                     }, null
             );
@@ -953,11 +816,14 @@ public class TakePhotoFragment
      * @param viewHeight The height of `mTextureView`
      */
     private void configureTransform(int viewWidth, int viewHeight) {
+
         Activity activity = getActivity();
         if (null == mTextureView || null == mPreviewSize || null == activity) {
             return;
         }
+
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
+
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
@@ -982,10 +848,7 @@ public class TakePhotoFragment
      */
     private void lockFocus() {
         try {
-
-            //todo: Olivier: line to delete
-            Log.d(TAG, "lockFocus");
-            showToast("lockFocus");
+            //showToast("lockFocus");
 
             // This is how to tell the camera to lock focus.
             mPreviewRequestBuilder.set(
@@ -1018,9 +881,6 @@ public class TakePhotoFragment
             mCaptureSession.capture(mPreviewRequestBuilder.build(), mCaptureCallback,
                     mBackgroundHandler);
 
-            //todo: Olivier: line to delete
-            Log.d(TAG, "runPrecaptureSequence a été appelé");
-
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -1031,17 +891,9 @@ public class TakePhotoFragment
      * {@link #mCaptureCallback} from both {@link #lockFocus()}.
      */
     private void captureStillPicture() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "captureStillPicture!!");
-        showToast("captureStillPicture!!");
-
         try {
             final Activity activity = getActivity();
             if (null == activity || null == mCameraDevice) {
-
-                //todo: Olivier: line to delete
-                Log.d(TAG, "captureStillPicture ACTIVITY ET MCAMERADEVICE = NULL");
                 return;
             }
             // This is the CaptureRequest.Builder that we use to take a picture.
@@ -1058,9 +910,6 @@ public class TakePhotoFragment
             // Orientation
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
 
-            //todo: Olivier: line to delete
-            Log.d(TAG, "captureStillPicture - rotation = " + rotation);
-
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, getOrientation(rotation));
 
             CameraCaptureSession.CaptureCallback CaptureCallback =
@@ -1071,11 +920,7 @@ public class TakePhotoFragment
                                                        @NonNull CaptureRequest request,
                                                        @NonNull TotalCaptureResult result) {
 
-                            //todo: Olivier: line to delete
-                            Log.d(TAG, "onCaptureCompleted has been called");
                             showToast("Saved: " + mFile);
-
-                            Log.d(TAG, "Saved: " + mFile.toString());
                             unlockFocus();
                         }
                     };
@@ -1106,10 +951,6 @@ public class TakePhotoFragment
      * finished.
      */
     private void unlockFocus() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "unlockFocus");
-
         try {
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -1136,17 +977,9 @@ public class TakePhotoFragment
                 .format(System.currentTimeMillis());
         mfileName = "epicselfie_" + timeStamp + ".jpg";
 
-
         File path = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         mFile = new File(path, mfileName);
-
-        //mFile = new File(getActivity().getExternalFilesDir(null), mfileName);
-
         mSelfieUri = Uri.fromFile(mFile);
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "onClick - mFile = " + mFile);
-        Log.d(TAG, "onClick - mSelfieUri = " + mSelfieUri);
 
         takePictureGoogle();
     }
@@ -1160,42 +993,30 @@ public class TakePhotoFragment
 
     /**
      * Initiate a still image capture.
-     *
+     * <p>
      * D'apres mes experimentation les cameras BACK et FRONT n'ont pas le meme fonctionnement.
-     *
+     * <p>
      * La camera FRONT fonctionne en passant par la methode lockfocus qui (a preciser) modifie
      * l'état de la camera, cet etat modifié déclenche le processus de prise de photo. Ce
      * processus est basé sur l'état de la lentille.
-     *
+     * <p>
      * La camera BACK ne répond pas à ce processus de lentille. C'est pourquoi je mets en place
      * un flag qui indique si la camera est BACK, si c'est le cas je lance directement la prise
      * de photo.
      */
     private void takePictureGoogle() {
         if (!mIsCameraBack) {
-            //todo: Olivier: line to delete
-            Log.d(TAG, "takePictureGoogle - camera FRONT");
             lockFocus();
-
         } else {
-            //todo: Olivier: line to delete
-            Log.d(TAG, "takePictureGoogle - camera BACK");
             captureStillPicture();
         }
 
         //~switch
-        lauchNextFragment();
+        launchNextFragment();
     }
 
 
-    //~switch
-    public void lauchNextFragment() {
-
-        //todo: Olivier: line to delete
-        Log.d(TAG, "lauchNextFragment: MSELFIEURI= " + mSelfieUri);
-
-        //warning: il est indispensable de mettre des gardes fous/verifications pour que le ..
-        //warning .. fragment suivant ne soit pas lancé en n'ayant rien a montrer
+    public void launchNextFragment() {
         getActivity().getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, PresentPhotoFragment.newInstance(mSelfieUri))
                 .addToBackStack(null)
@@ -1220,9 +1041,6 @@ public class TakePhotoFragment
         public ImageSaver(Image image, File file) {
             mImage = image;
             mFile = file;
-
-            //todo: Olivier: line to delete
-            Log.d(TAG, "ImageSaver - mFile = " + mFile);
         }
 
         @Override
@@ -1305,15 +1123,14 @@ public class TakePhotoFragment
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
-//            final android.app.Fragment parent = getParentFragment();
             final Fragment parent = getParentFragment();
             return new AlertDialog.Builder(getActivity())
                     .setMessage(R.string.request_permission)
                     .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-//                          ~  FragmentCompat.requestPermissions(parent, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION); }
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION); }
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION);
+                        }
                     })
                     .setNegativeButton(android.R.string.cancel,
                             new DialogInterface.OnClickListener() {
