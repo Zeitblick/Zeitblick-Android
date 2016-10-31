@@ -45,7 +45,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start"
-            app:srcCompat="@drawable/ic_zeitblick_icon_64"
+            app:srcCompat="@mipmap/ic_zeitblick_lines"
             android:background="@android:color/transparent"
             android:layout_marginStart="20dp"/>
 
