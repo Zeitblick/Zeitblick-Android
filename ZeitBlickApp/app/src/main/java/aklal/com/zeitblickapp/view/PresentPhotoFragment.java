@@ -4,7 +4,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +22,13 @@ import butterknife.Unbinder;
 /**
  * Created by Aklal on 08.10.16.
  */
+
 public class PresentPhotoFragment extends Fragment {
-
-    public interface OnAnalysisLaunchedListener{
-        void onAnalysisLaunched(Uri uri);
-    }
-
 
     private final String TAG = getClass().getSimpleName();
     private Unbinder unbinder;
 
-    // key of selfie uri in Fragment's args
+    // Key of selfie uri in Fragment's args
     private static final String SELFIE_URI = "SELFIE_URI";
     private Uri mSelfieUri;
 
@@ -62,9 +57,6 @@ public class PresentPhotoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.present_photo_fragment, container, false);
 
-        // Hide appbar/action bar
-        ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
-
         // Set immersive mode
         View decorView = getActivity().getWindow().getDecorView();
         int uiOptions = decorView.getSystemUiVisibility();
@@ -77,7 +69,6 @@ public class PresentPhotoFragment extends Fragment {
 
         mImageViewSelfie = (ImageView) view.findViewById(R.id.iv_taken_photo);
 
-        //info: to let the image be full screen
         mImageViewSelfie.setLayoutParams(
                 new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,
                         FrameLayout.LayoutParams.MATCH_PARENT));
@@ -101,10 +92,11 @@ public class PresentPhotoFragment extends Fragment {
     }
 
     @OnClick(R.id.btt_los_gehts)
-    public void selfieAccepted(){
+    public void selfieAccepted() {
         MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.onAnalysisLaunched(mSelfieUri);
     }
+
 
     @OnClick(R.id.btt_nochmal)
     public void selfieRejected(){
@@ -114,10 +106,6 @@ public class PresentPhotoFragment extends Fragment {
                 .replace(R.id.fragment_container, TakePhotoFragment.newInstance()).commit();
     }
 
-
-    /**
-     * Delete Selfie if user decide to take another instead of vizualising matchin photo
-     */
     private void deleteSelfie() {
         File file = new File(mSelfieUri.getPath());
         file.delete();

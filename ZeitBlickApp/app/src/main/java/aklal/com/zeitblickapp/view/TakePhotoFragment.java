@@ -36,7 +36,6 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -68,12 +67,10 @@ import butterknife.Unbinder;
 /**
  * Created by aklal on 08.10.16.
  *
+ * <p>
  * Take photo using Camera2 Api
  */
-//info: FragmentCompat.OnRequestPermissionsResultCallback is the contract for receiving ..
-//info: .. the results for permission requests.
 public class TakePhotoFragment
-
         extends Fragment
         implements View.OnClickListener, FragmentCompat.OnRequestPermissionsResultCallback {
 
@@ -85,7 +82,6 @@ public class TakePhotoFragment
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
 
     private static final int REQUEST_CAMERA_PERMISSION = 1;
-
 
     private static final String FRAGMENT_DIALOG = "dialog";
     /**
@@ -120,17 +116,14 @@ public class TakePhotoFragment
      */
     private static final int MAX_PREVIEW_HEIGHT = 1080;
 
-    //Name of the saved image
-    private String mfileName;
-    //Uri of the saves image
-    private Uri mSelfieUri;
-
     static {
         ORIENTATIONS.append(Surface.ROTATION_0, 90);
         ORIENTATIONS.append(Surface.ROTATION_90, 0);
         ORIENTATIONS.append(Surface.ROTATION_180, 270);
         ORIENTATIONS.append(Surface.ROTATION_270, 180);
     }
+
+    // used to switch from front to back camera (and reciprocally) -- NOT USED (right now)
     Boolean isCameraToUseFront, isCameraToUseBack;
     private Unbinder unbinder;
     /**
@@ -140,6 +133,7 @@ public class TakePhotoFragment
     /**
      * An {@link TextureView} for camera preview.
      */
+//    private AutoFitTextureView mTextureView;
     private TextureView mTextureView;
     /**
      * A {@link CameraCaptureSession } for camera preview.
@@ -182,7 +176,6 @@ public class TakePhotoFragment
         }
 
     };
-
     private Boolean mIsCameraBack, mIsCameraFront;
     /**
      * {@link CaptureRequest.Builder} for the camera preview
@@ -249,6 +242,7 @@ public class TakePhotoFragment
                     // We have nothing to do when the camera preview is working normally.
                     break;
                 }
+
 
                 case STATE_WAITING_LOCK: {
                     //showToast("STATE_WAITING_LOCK");
@@ -329,7 +323,9 @@ public class TakePhotoFragment
         @Override
         public void onDisconnected(@NonNull CameraDevice cameraDevice) {
 
-            Log.d(TAG, "Camera device is deconnected");
+            //todo: Olivier: line to delete
+            Log.d(TAG, "onDisconnected: La cameradevice est deconnectée");
+            //showToast("La cameradevice est deconnectée");
 
             mCameraOpenCloseLock.release();
             cameraDevice.close();
@@ -348,6 +344,10 @@ public class TakePhotoFragment
         }
 
     };
+    //~ attribut pris de Android developpement cookbook
+    private String mfileName; //~ le nom de l'image sauvegardée
+    //~ attribut pour stocker Uri
+    private Uri mSelfieUri;
 
     public static TakePhotoFragment newInstance() {
         Bundle args = new Bundle();
@@ -450,8 +450,6 @@ public class TakePhotoFragment
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Hide appbar/action bar
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
 //        View view = inflater.inflate(R.layout.take_photo_fragment_linear_layout, container, false);
         View view = inflater.inflate(R.layout.take_photo_fragment, container, false);
@@ -468,7 +466,6 @@ public class TakePhotoFragment
         newUiOptions |= View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
         newUiOptions |= View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         decorView.setSystemUiVisibility(newUiOptions);
-
 
         return view;
     }
@@ -521,6 +518,7 @@ public class TakePhotoFragment
 
                 FragmentManager fm = getFragmentManager();
                 ErrorDialog.newInstance(getString(R.string.request_permission))
+                        /* ~ .show(getChildFragmentManager(), FRAGMENT_DIALOG);*/
                         .show(getFragmentManager(), FRAGMENT_DIALOG);
             }
         } else {
@@ -542,6 +540,9 @@ public class TakePhotoFragment
         CameraManager manager = (CameraManager) activity.getSystemService(Context.CAMERA_SERVICE);
         try {
             for (String cameraId : manager.getCameraIdList()) {
+
+                //todo: Olivier: line to delete
+                Log.d(TAG, "SETUPCAMERAOUTPUTS - ID camera = " + cameraId);
 
                 CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
 
@@ -634,6 +635,7 @@ public class TakePhotoFragment
                         rotatedPreviewWidth, rotatedPreviewHeight, maxPreviewWidth,
                         maxPreviewHeight, largest);
 
+
                 // We fit the aspect ratio of TextureView to the size of preview we picked.
                 int orientation = getResources().getConfiguration().orientation;
 
@@ -688,6 +690,7 @@ public class TakePhotoFragment
      * Closes the current {@link CameraDevice}.
      */
     private void closeCamera() {
+
         try {
             mCameraOpenCloseLock.acquire();
             if (null != mCaptureSession) {
@@ -748,7 +751,7 @@ public class TakePhotoFragment
             Surface surface = new Surface(texture);
 
 
-            /**
+            /**~
              * Create a request suitable for a camera preview window. Specifically, this means
              * that high frame rate is given priority over the highest-quality post-processing.
              * These requests would normally be used with the
@@ -798,7 +801,7 @@ public class TakePhotoFragment
                         @Override
                         public void onConfigureFailed(
                                 @NonNull CameraCaptureSession cameraCaptureSession) {
-                            showToast("Failed");
+                            //showToast("Failed");
                         }
                     }, null
             );
@@ -821,9 +824,7 @@ public class TakePhotoFragment
         if (null == mTextureView || null == mPreviewSize || null == activity) {
             return;
         }
-
         int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
-
         Matrix matrix = new Matrix();
         RectF viewRect = new RectF(0, 0, viewWidth, viewHeight);
         RectF bufferRect = new RectF(0, 0, mPreviewSize.getHeight(), mPreviewSize.getWidth());
@@ -848,6 +849,7 @@ public class TakePhotoFragment
      */
     private void lockFocus() {
         try {
+
             //showToast("lockFocus");
 
             // This is how to tell the camera to lock focus.
@@ -891,6 +893,8 @@ public class TakePhotoFragment
      * {@link #mCaptureCallback} from both {@link #lockFocus()}.
      */
     private void captureStillPicture() {
+        //showToast("captureStillPicture!!");
+
         try {
             final Activity activity = getActivity();
             if (null == activity || null == mCameraDevice) {
@@ -920,7 +924,9 @@ public class TakePhotoFragment
                                                        @NonNull CaptureRequest request,
                                                        @NonNull TotalCaptureResult result) {
 
-                            showToast("Saved: " + mFile);
+                            //showToast("Saved: " + mFile);
+
+                            Log.d(TAG, "Saved: " + mFile.toString());
                             unlockFocus();
                         }
                     };
@@ -951,6 +957,10 @@ public class TakePhotoFragment
      * finished.
      */
     private void unlockFocus() {
+
+        //todo: Olivier: line to delete
+        Log.d(TAG, "unlockFocus");
+
         try {
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,
@@ -977,8 +987,10 @@ public class TakePhotoFragment
                 .format(System.currentTimeMillis());
         mfileName = "epicselfie_" + timeStamp + ".jpg";
 
+
         File path = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         mFile = new File(path, mfileName);
+
         mSelfieUri = Uri.fromFile(mFile);
 
         takePictureGoogle();
@@ -993,28 +1005,17 @@ public class TakePhotoFragment
 
     /**
      * Initiate a still image capture.
-     * <p>
-     * D'apres mes experimentation les cameras BACK et FRONT n'ont pas le meme fonctionnement.
-     * <p>
-     * La camera FRONT fonctionne en passant par la methode lockfocus qui (a preciser) modifie
-     * l'état de la camera, cet etat modifié déclenche le processus de prise de photo. Ce
-     * processus est basé sur l'état de la lentille.
-     * <p>
-     * La camera BACK ne répond pas à ce processus de lentille. C'est pourquoi je mets en place
-     * un flag qui indique si la camera est BACK, si c'est le cas je lance directement la prise
-     * de photo.
      */
     private void takePictureGoogle() {
         if (!mIsCameraBack) {
             lockFocus();
+
         } else {
             captureStillPicture();
         }
 
-        //~switch
         launchNextFragment();
     }
-
 
     public void launchNextFragment() {
         getActivity().getSupportFragmentManager().beginTransaction()
@@ -1118,7 +1119,6 @@ public class TakePhotoFragment
     /**
      * Shows OK/Cancel confirmation dialog about camera permission.
      */
-    //TODO: 09.10.16 Cette classe devrait etre sous util
     public static class ConfirmationDialog extends DialogFragment {
 
         @Override

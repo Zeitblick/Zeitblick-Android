@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/intro_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#321500">
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -13,17 +14,23 @@
         android:layout_gravity="center"
         android:indeterminate="true" />
 
+    <!--android:fillViewport 	Defines whether the scrollview should stretch its content to fill the viewport.-->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="horizontal"
+        android:scrollbarSize="50dp"
+        android:scrollbarAlwaysDrawVerticalTrack="true"
+        android:scrollbarAlwaysDrawHorizontalTrack="true"
+        android:scrollbarStyle="insideOverlay">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:background="#4C494C">
 
-            <!-- Display matching image ... or error image -->
             <ImageView
                 android:id="@+id/iv_matching_mkg_photo"
                 android:layout_height="match_parent"
@@ -32,15 +39,16 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- Bottom layout (information button + photo + button "+" -->
+
+    <!-- layout bas de page (bouton information + photo + bouton "+" -->
     <FrameLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_taken_photo"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="@dimen/layout_button_photo_margin_bottom"
         android:orientation="horizontal">
+        <!--android:layout_below="@id/iv_taken_photo"-->
 
         <!-- Button information -->
         <ImageButton
@@ -56,6 +64,9 @@
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_info_v2" />
 
+        <!--app:srcCompat="@drawable/ic_info_outline_48px"-->
+
+
         <!-- Button "+" -->
         <ImageButton
             android:id="@+id/btt_options"
@@ -70,7 +81,9 @@
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_plus_v2" />
 
-        <!-- Thumbnail with taken photo -->
+        <!--app:srcCompat="@drawable/ic_plus_circle_outline"-->
+
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/iv_thumbnail_taken_photo"
             android:layout_width="98dp"

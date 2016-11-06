@@ -5,8 +5,8 @@ import android.util.Log;
 
 import aklal.com.zeitblickapp.presenter.PresenterModelContract;
 import aklal.com.zeitblickapp.webdata.ZeitBlickApi;
-import aklal.com.zeitblickapp.webdata.models.Bild;
-import aklal.com.zeitblickapp.webdata.models.HeadRotation;
+import aklal.com.zeitblickapp.webdata.models.matching_image.MatchingImage;
+import aklal.com.zeitblickapp.webdata.models.vision_api.HeadRotation;
 import aklal.com.zeitblickapp.webdata.utils.Constants;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -65,30 +65,26 @@ public class ZeitBlickApiImpl {
     }
 
 
+
     public void getSimilarRotation(HeadRotation headRotation) {
-        Call<Bild> call = mZeitBlickApi.getSimilarHeadRotation(headRotation);
-        call.enqueue(new Callback<Bild>() {
+        Call<MatchingImage> call = mZeitBlickApi.getSimilarHeadRotation(headRotation);
+        call.enqueue(new Callback<MatchingImage>() {
             @Override
-            public void onResponse(Call<Bild> call, Response<Bild> response) {
+            public void onResponse(Call<MatchingImage> call, Response<MatchingImage> response) {
 
                 if (response.isSuccessful()) {
-                    // Pass name photo to presenter
-                    mPresenter.retrieveMatchingPhotoName(response.body().getInventoryNo());
+                    mPresenter.retrieveMkgMatchingImage(response.body());
                 } else {
                     mPresenter.displayErrorPicture();
-                    //todo implementer un mecanisme comme riggaroo:
-                    //https://riggaroo.co.za/retrofit-2-mocking-http-responses/
                 }
             }
 
             @Override
-            public void onFailure(Call<Bild> call, Throwable t) {
+            public void onFailure(Call<MatchingImage> call, Throwable t) {
+
                 //todo on Failure a particular photo with text must be displayed
-                Log.d(TAG, "onResponse: ERROR");
             }
         });
     }
 
-
 }
-

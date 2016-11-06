@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +21,14 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 
 import static aklal.com.zeitblickapp.view.util.ConstantTag.DISPLAY_CREADITS_FRAGMENT_TAG;
-import static com.nostra13.universalimageloader.core.ImageLoader.TAG;
 
 /**
  * Created by Aklal on 23.10.16.
  */
+
 public class IntroFragment extends Fragment {
+
+    public static final String FRAGMENT_TAG = "Credits";
 
     Unbinder unbinder;
 
@@ -51,7 +51,8 @@ public class IntroFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mACaslonItalicText = Typeface.createFromAsset(getActivity().getAssets(), "ACaslonPro-Italic.ttf");
+        mACaslonItalicText = Typeface
+                .createFromAsset(getActivity().getAssets(), "ACaslonPro-Italic.ttf");
     }
 
     @Override
@@ -65,9 +66,6 @@ public class IntroFragment extends Fragment {
         View view = inflater.inflate(R.layout.intro_fragment, container, false);
 
         unbinder = ButterKnife.bind(this, view);
-
-        // Hide appbar/action bar
-        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         // Set immersive mode
         View decorView = getActivity().getWindow().getDecorView();
@@ -84,7 +82,7 @@ public class IntroFragment extends Fragment {
         //TODO: 29.10.16 should this be rather an icon ?
         mTvAppName.setTypeface(mACaslonItalicText);
 
-        // animate png in sequence //todo it is ok but can surely be better
+        // Animate png in sequence //todo it is ok but can surely be better
         ((AnimationDrawable) mIvAnimated.getBackground()).start();
 
         return view;
@@ -93,6 +91,7 @@ public class IntroFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+
         super.onDestroyView();
     }
 
@@ -105,7 +104,7 @@ public class IntroFragment extends Fragment {
     @OnClick(R.id.btt_information_intro)
     public void onInformationIntroClicked() {
         FragmentManager fm = getFragmentManager();
-        CreditsDialogFragment creditsDialogFragment = CreditsDialogFragment.newInstance("Credits");
+        CreditsDialogFragment creditsDialogFragment = CreditsDialogFragment.newInstance(FRAGMENT_TAG);
         creditsDialogFragment.show(fm, DISPLAY_CREADITS_FRAGMENT_TAG);
     }
 }

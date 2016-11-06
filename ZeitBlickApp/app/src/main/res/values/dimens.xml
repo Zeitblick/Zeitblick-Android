@@ -1,4 +1,8 @@
 <resources>
+
+    <!-- allegemeine -->
+    <dimen name="layout_button_photo_margin_bottom">15dp</dimen>
+
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
@@ -13,5 +17,19 @@
     <dimen name="text_result_fragment">46sp</dimen><!--Not used-->
     <dimen name="text_icon_intro_fragment">24sp</dimen>
     <dimen name="text_present_fragment">16sp</dimen>
+
+    <!-- options_transparent_fragment -->
+    <dimen name="dimen_option_button_app">120dp</dimen>
+    <dimen name="dimen_option_button_social">40dp</dimen>
+
+
+    <!-- information_fragment -->
+    <dimen name="information_layout_bottom_margin">20dp</dimen>
+    <dimen name="information_layout_top_margin">10dp</dimen>
+    <dimen name="information_header_text_size">18sp</dimen>
+    <dimen name="information_content_text_size">16sp</dimen>
+
+    <!-- Fragment Option -->
+    <dimen name="option_button_text_size">14sp</dimen>
 
 </resources>

@@ -6,17 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <ImageView
         android:id="@+id/iv_taken_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#00a0a0"/>
 
-
-
-
-    <!-- //todo améliorer taille et typedface du texte -->
     <FrameLayout
         android:id="@+id/linearLayout1"
         android:layout_width="match_parent"

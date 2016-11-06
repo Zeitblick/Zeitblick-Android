@@ -1,30 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-<!--    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
-    <color name="control_background">#cc4285f4</color>-->
-
-<!--    <color name="colorPrimary">#c7bf8a</color>
-    <color name="colorPrimaryDark">#86815c</color>
-    <color name="colorAccent">#463f3a</color>
-    <color name="control_background">#cc4285f4</color>-->
-
-
-    <color name="colorPrimary">#ab9962</color> <!-- //primary color definie par stefan est RGB: 171, 153, 98-->
-    <color name="colorPrimaryDark">#6D694A</color> <!-- //fixme la colorPrimaryDark selon la primary color definie par stefan -->
-    <color name="colorAccent">#24201E</color> <!-- //fixme la colorAccent selon la primary color definie par stefan -->
-
-<!--    <color name="colorPrimary">#86815c</color>
+    <color name="colorPrimary">#ab9962</color>
     <color name="colorPrimaryDark">#6D694A</color>
-    <color name="colorAccent">#24201E</color>-->
-
-
-<!--    <color name="colorPrimary">#463F3A</color>
-    <color name="colorPrimaryDark">#CA2E55</color>
-    <color name="colorAccent">#515DFF </color>-->
-    <color name="control_background">#CC4285F4</color>
+    <!--<color name="colorAccent">#24201E</color>-->
+    <color name="colorAccent">#7E7CD5</color>
+    <color name="colorAccentTranslucent">#FF7E7CD5</color>
+    <color name="control_background">#CCF7FE72</color>
 
     <color name="textColor">#EBEBEB</color>
     <color name="borderColor">#FFEBEBEB</color>
+
+
+    <color name="primary">#AB9962</color>
+    <color name="primary_dark">#6D694A</color>
+    <!--<color name="accent">#F7FE72</color>-->
+    <color name="accent">#7E7CD5</color>
+    <color name="accent_translucent">#FF7E7CD5</color>
+    <color name="accent_bright">#9D9BD6</color>
 </resources>
+

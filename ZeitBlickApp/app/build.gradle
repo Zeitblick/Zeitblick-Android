@@ -42,11 +42,11 @@ dependencies {
     compile 'com.google.apis:google-api-services-vision:v1-rev16-1.22.0'
     compile 'com.google.code.findbugs:jsr305:2.0.1'
     compile 'com.google.http-client:google-http-client-gson:1.19.0'
+
     // Butterknife
     compile "com.jakewharton:butterknife:$rootProject.ext.butterknifeVersion"
     apt "com.jakewharton:butterknife-compiler:$rootProject.ext.butterknifeVersion"
-    // To do imageview in rectangle/sqare/circle cf present_photo_fragment_si
-    compile 'com.github.siyamed:android-shape-imageview:0.9.+@aar'
+
     // To do imageview in circle
     compile 'de.hdodenhof:circleimageview:2.1.0'
     // Network calls
@@ -66,9 +66,12 @@ dependencies {
     compile 'com.squareup.okhttp3:logging-interceptor:3.4.1'
 
     // download matching image
-    compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
     //to easily use html tag for textview
     compile 'org.sufficientlysecure:html-textview:2.0'
+    //to use ToStringBuilder in webdata class
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'com.android.support:design:25.0.0'
+    compile 'com.facebook.android:facebook-android-sdk:4.17.0'
 }

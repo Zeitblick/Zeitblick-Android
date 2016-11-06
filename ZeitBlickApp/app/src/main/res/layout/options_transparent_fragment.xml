@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#aa080707">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="100dp">
+
+        <ImageButton
+            android:id="@+id/ib_facebook"
+            android:layout_width="@dimen/dimen_option_button_social"
+            android:layout_height="@dimen/dimen_option_button_social"
+            android:layout_gravity="start"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/btt_facebook"/>
+
+        <ImageButton
+            android:id="@+id/ib_social_twitter"
+            android:layout_width="@dimen/dimen_option_button_social"
+            android:layout_height="@dimen/dimen_option_button_social"
+            android:layout_gravity="center"
+            android:layout_marginRight="20dp"
+            android:background="@mipmap/btt_twitter"/>
+
+        <ImageButton
+            android:id="@+id/ib_social_instagramm"
+            android:layout_width="@dimen/dimen_option_button_social"
+            android:layout_height="@dimen/dimen_option_button_social"
+            android:layout_gravity="end"
+            android:background="@mipmap/btt_instagram_v2"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="30dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp">
+
+            <ImageButton
+                android:id="@+id/iv_teilen"
+                android:layout_width="@dimen/dimen_option_button_app"
+                android:layout_height="@dimen/dimen_option_button_app"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="10dp"
+                android:background="@mipmap/btt_share_v2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textAllCaps="false"
+                android:textSize="@dimen/option_button_text_size"
+                android:textColor="@color/textColor"
+                android:text="Teilen" />
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/iv_blid_melden"
+                android:layout_width="@dimen/dimen_option_button_app"
+                android:layout_height="@dimen/dimen_option_button_app"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="10dp"
+                android:background="@mipmap/btt_report_v2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textSize="@dimen/option_button_text_size"
+                android:textColor="@color/textColor"
+                android:text="Bild melden" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp">
+
+            <ImageButton
+                android:id="@+id/iv_pick_image"
+                android:layout_width="@dimen/dimen_option_button_app"
+                android:layout_height="@dimen/dimen_option_button_app"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="10dp"
+                android:background="@mipmap/btt_pick_image_v2" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textAllCaps="false"
+                android:textSize="@dimen/option_button_text_size"
+                android:textColor="@color/textColor"
+                android:text="Bild Auswählen" />
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageButton
+                android:id="@+id/iv_new_photo"
+                android:layout_width="@dimen/dimen_option_button_app"
+                android:layout_height="@dimen/dimen_option_button_app"
+                android:layout_gravity="center|top"
+                android:layout_marginBottom="10dp"
+                android:background="@mipmap/btt_new_photo_v3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|bottom"
+                android:textSize="@dimen/option_button_text_size"
+                android:textColor="@color/textColor"
+                android:text="Neues Foto" />
+        </FrameLayout>
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btt_close_fragment"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_gravity="bottom|end"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="20dp"
+        android:background="@mipmap/btt_close"/>
+    <!--android:background="@drawable/ic_close"-->
+
+
+</LinearLayout>

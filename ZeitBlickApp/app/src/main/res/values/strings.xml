@@ -21,7 +21,25 @@
     <string name="text_icon_intro">Zeitblick</string>
     <string name="text_present_photo_abbort">Nochmal</string>
     <string name="text_present_photo_accept">Los gehts</string>
+    <string name="message_error">"Something blöd happened, try again"</string>
 
 
+    <!-- fragment information -->
+    <string name="info_collapsing_toolbar">collapsing toolbar</string>
+    <string name="info_unknown_content">Unbekannt</string>
+    <string name="info_link_text">on Mkg sammlung online</string>
+    <string name="info_title">Title</string>
+    <string name="info_artist">Artist</string>
+    <string name="info_location">Location</string>
+    <string name="info_description">Description</string>
+    <string name="info_licence">Licence</string>
+    <string name="info_link">Link</string>
+    <string name="info_"></string>
+
+    <!-- fragment option -->
+    <!-- //todo set strings here !! -->
+
+    <!-- api facebook -->
+    <string name="facebook_app_id">153002768499630</string>
 
 </resources>

@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -22,20 +23,27 @@ import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.FailReason;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import java.io.ByteArrayOutputStream;
+
 import aklal.com.zeitblickapp.MainActivity;
 import aklal.com.zeitblickapp.R;
 import aklal.com.zeitblickapp.presenter.AnalysisPresenter;
 import aklal.com.zeitblickapp.presenter.PresenterViewContract;
+import aklal.com.zeitblickapp.webdata.models.matching_image.MatchingImage;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static aklal.com.zeitblickapp.R.drawable.error_image;
+
 /**
  * Created by Aklal on 10.10.16.
  */
-public class DisplayResultsFragment extends Fragment implements PresenterViewContract.View {
+public class DisplayResultsFragment
+        extends Fragment
+        implements PresenterViewContract.View {
 
     private static final String TAG = DisplayResultsFragment.class.getSimpleName();
 
@@ -44,22 +52,32 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     @BindView(R.id.iv_matching_mkg_photo)
     ImageView ivMatchingMkgPhoto;
 
-    Context mContext;
+    @BindView(R.id.progress_bar)
+    ProgressBar mProgressBar;
 
-    // used to display taken selfie in a circular view
+    @BindView(R.id.btt_options)
+    ImageButton mBttOptions;
+
+    @BindView(R.id.btt_information)
+    ImageButton mBttInformation;
+
+    private Context mContext;
+
+    private MatchingImage mMatchingImage;
+
+    // Used to display taken selfie in a circular view
     private CircleImageView mIvSubmittedPhoto;
 
     // Animation played during download process
     private AnimationDrawable mWaitingAnimation;
 
-    @BindView(R.id.progress_bar)
-    ProgressBar mProgressBar;
-
     private Unbinder unbinder;
 
-    private Uri mSelfieUri;
     private MainActivity mActivity;
 
+    private byte[] mBitmapByteArray;
+    private Uri mSelfieUri;
+    private String mSelfieStringUri;
 
     private PresenterViewContract.Operations mAnalysisPresenter;
 
@@ -83,31 +101,36 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mSelfieStringUri = getArguments().getString(URI_TO_SELFIE);
+        mSelfieUri = Uri.parse(mSelfieStringUri);
 
-        mSelfieUri = Uri.parse(getArguments().getString(URI_TO_SELFIE));
-
-        //Note: n'est il pas possible d'injecter le presenter afin de pvoir l'interchanger facilement ?
         mAnalysisPresenter = new AnalysisPresenter(this, mSelfieUri, mActivity);
-
-        // call presenter
         mAnalysisPresenter.analysePhoto();
     }
 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.present_result_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.display_result, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mIvSubmittedPhoto = (CircleImageView) view.findViewById(R.id.iv_thumbnail_taken_photo);
 
-        //Set taken photo in a circle view
+        // Buttons are unclickable until an Image is displayed
+        mBttOptions.setClickable(false);
+        mBttInformation.setClickable(false);
+
+        // Set taken photo in a circle view
         mIvSubmittedPhoto.setImageURI(mSelfieUri);
+
         // Image coming from Front Camera has to be flipped
         mIvSubmittedPhoto.setRotationY(180);
 
-        // anime une sequence d'images, ok mais pas configurable
+        // Animate a sequence of image
         mWaitingAnimation = (AnimationDrawable) ivMatchingMkgPhoto.getBackground();
         mWaitingAnimation.start();
 
@@ -120,29 +143,17 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
     @Override
     public void onDestroyView() {
         unbinder.unbind();
+
         super.onDestroyView();
     }
 
     @Override
-    public void displayProgress(boolean active) {
-    }
-
-    @Override
-    public void displayTextResult(String results) {
-    }
-
-    @Override
     public void displaySimilarPhoto(Uri uri) {
-        Log.i(TAG, "displaySimilarPhoto: URI TO DISPLAY: " + uri);
         ivMatchingMkgPhoto.setImageURI(uri);
     }
 
-
     @Override
     public void displaySimilarPhoto(String name) {
-
-        Log.i(TAG, "displaySimilarPhoto: name= " + name);
-
         ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(getContext())
                 .build();
 
@@ -150,7 +161,7 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
         imageLoader.init(config);
 
         //todo hard coded String
-        String imageURI = "https://storage.googleapis.com/projektlisa_test/" + name + ".jpg";
+        String imageToDownloadURI = "https://storage.googleapis.com/projektlisa_test/" + name + ".jpg";
 
         DisplayImageOptions options = new DisplayImageOptions.Builder()
 //                .showImageOnLoading(R.drawable.image_placeholder) // resource or drawable
@@ -162,7 +173,7 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
                 .cacheOnDisk(true) // default => false
                 .build();
 
-        imageLoader.displayImage(imageURI, ivMatchingMkgPhoto, options, new ImageLoadingListener() {
+        imageLoader.displayImage(imageToDownloadURI, ivMatchingMkgPhoto, options, new ImageLoadingListener() {
             @Override
             public void onLoadingStarted(String imageUri, View view) {
                 Log.i(TAG, "onLoadingStarted: Loading Started");
@@ -170,27 +181,27 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
 
             @Override
             public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
-                Log.i(TAG, "onLoadingStarted: Loading Failed");
-
-
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
-                //Stop the animation to be able to display image result
+                // Stop the animation to be able to display image result
                 mWaitingAnimation.stop();
 
-                ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(R.drawable.error));
-
-                Toast.makeText(mContext, "Something blöd happened, try again", Toast.LENGTH_LONG).show();
+                // Display error image
+                displayError();
             }
 
             @Override
             public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
-                Log.i(TAG, "onLoadingStarted: Loading Complete");
-
                 mProgressBar.setVisibility(ProgressBar.INVISIBLE);
+
+                //Set buttons clickable
+                mBttInformation.setClickable(true);
+                mBttOptions.setClickable(true);
 
                 //Stop the animation to be able to display image result
                 mWaitingAnimation.stop();
+
+                mBitmapByteArray = convertBitmapToByteArray(loadedImage);
             }
 
             @Override
@@ -199,53 +210,77 @@ public class DisplayResultsFragment extends Fragment implements PresenterViewCon
             }
         });
 
-        //info: to let the image be full screen
-        //http://stackoverflow.com/questions/24463691/how-to-show-imageview-full-screen-on-imageview-click
         ivMatchingMkgPhoto.setLayoutParams(
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT));
         ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
     }
 
+
     @Override
     public void displayError() {
-        Log.i(TAG, "onLoadingStarted: Loading Failed");
-
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
         //Stop the animation to be able to display image result
         mWaitingAnimation.stop();
 
-        ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(R.drawable.error));
+        ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(error_image));
         ivMatchingMkgPhoto.setLayoutParams(
                 new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.MATCH_PARENT));
-        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.FIT_XY);
+        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        Toast.makeText(mContext, "Something blöd happened, try again", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext,
+                getResources().getString(R.string.message_error), Toast.LENGTH_LONG)
+                .show();
     }
-
 
     @Override
-    public void displayPrevPhoto() {
+    public void retrieveMatchingImage(MatchingImage image) {
+        mMatchingImage = image;
 
+        displaySimilarPhoto(image.getInventoryNo());
     }
 
-
+    /**
+     * Displays transparent fragment with all options when option button is clicked
+     **/
     @OnClick(R.id.btt_options)
     public void onOptionsClicked(){
-/*        Dialog dialog = new Dialog(getActivity());
-
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-
-        dialog.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-        // layout to display
-        dialog.setContentView(R.layout.option_dialog);
-
-        // set color transpartent
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(0));
-
-        dialog.show();*/
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container,
+                        OptionsTransparentFragment.newInstance(mSelfieStringUri, mBitmapByteArray))
+                .commit();
     }
+
+    @OnClick(R.id.btt_information)
+    public void onInfoClicked(){
+        if (null != mBitmapByteArray) {
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container,
+                            InformationFragment.newInstance(mMatchingImage, mBitmapByteArray))
+                    .addToBackStack(null)
+                    .commit();
+        } else{
+            displayError();
+        }
+
+    }
+
+
+    private byte[] convertBitmapToByteArray(Bitmap bitmap) {
+        if (null != bitmap) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray();
+
+            return byteArray;
+        } else {
+            Log.e(TAG, "convertUriImageToByteArray: bitmap is null");
+        }
+        return null;
+    }
+
 }

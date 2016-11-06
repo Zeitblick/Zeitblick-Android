@@ -3,21 +3,13 @@ package aklal.com.zeitblickapp.view;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
-import android.text.SpannableString;
-import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import org.sufficientlysecure.htmltextview.HtmlTextView;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import aklal.com.zeitblickapp.R;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by Aklal on 27.10.16.
@@ -70,7 +62,7 @@ public class CreditsDialogFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.information_dialog, container);
+        View view = inflater.inflate(R.layout.credits_dialog, container);
         mHTView = (HtmlTextView) view.findViewById(R.id.html_text);
         return view;
     }
@@ -85,7 +77,4 @@ public class CreditsDialogFragment extends DialogFragment {
         String title = getArguments().getString("title", "Credits");
         getDialog().setTitle(title);
     }
-
-
-
 }

@@ -42,12 +42,11 @@
 
         <ImageView
             android:id="@+id/iv_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical|start"
-            app:srcCompat="@mipmap/ic_zeitblick_lines"
-            android:background="@android:color/transparent"
-            android:layout_marginStart="20dp"/>
+            android:layout_width="86dp"
+            android:layout_height="86dp"
+            android:layout_gravity="center"
+            app:srcCompat="@mipmap/ic_zeitblick_logo"
+            android:background="@android:color/transparent"/>
 
         <!-- //TODO This should be an svg icon not a textView -->
         <TextView
@@ -58,7 +57,7 @@
             android:textStyle="italic"
             android:typeface="serif"
             android:textAllCaps="false"
-            android:layout_gravity="center_vertical|end"
+            android:layout_gravity="center"
             android:textSize="@dimen/text_icon_intro_fragment"
             android:textColor="@color/textColor"
             android:text="@string/text_icon_intro"/>

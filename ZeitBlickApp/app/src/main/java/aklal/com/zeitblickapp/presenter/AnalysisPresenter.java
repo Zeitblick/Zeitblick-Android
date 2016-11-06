@@ -29,7 +29,8 @@ import java.util.List;
 import java.util.Locale;
 
 import aklal.com.zeitblickapp.MainActivity;
-import aklal.com.zeitblickapp.webdata.models.HeadRotation;
+import aklal.com.zeitblickapp.webdata.models.matching_image.MatchingImage;
+import aklal.com.zeitblickapp.webdata.models.vision_api.HeadRotation;
 import aklal.com.zeitblickapp.webdata.provider.ZeitBlickApiImpl;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -39,7 +40,8 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * <p>
  * Manage all non ui operations
  */
-public class AnalysisPresenter implements PresenterViewContract.Operations, PresenterModelContract.Operations {
+public class AnalysisPresenter
+        implements PresenterViewContract.Operations, PresenterModelContract.Operations {
 
     private static final String TAG = AnalysisPresenter.class.getSimpleName();
 
@@ -120,9 +122,12 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
 
 
     private HeadRotation returnHeadRotation(BatchAnnotateImagesResponse response) {
+
+        Log.i(TAG, "returnHeadRotation: response = " + response);
+
         HeadRotation headRotation = new HeadRotation();
 
-        String message = "return HeadRotation: ";
+        String message = "returnHeadRotation: ";
 
         List<FaceAnnotation> facemarks = response.getResponses().get(0)
                 .getFaceAnnotations();
@@ -159,15 +164,12 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
      * analyse it, then we ask our server if it has a photo with a similar
      * head rotation
      * <p>
+     * //todo REFACTOR: it is not correct that selfie anaylse and server to
+     * request are done with one call to analysePhotoOnGoogleVision!!
      */
     @Override
     public void analysePhoto() {
         analysePhotoOnGoogleVision(mPhotoUri);
-    }
-
-    @Override
-    public void getMatchingPhoto() {
-
     }
 
     @Override
@@ -184,7 +186,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
      */
     @Override
     public void retrieveMatchingPhotoName(String name) {
-        Log.i(TAG, "retrieveMatchingPhotoName: SIMILARY PHOTO= " + name);
         mAnalysisView.displaySimilarPhoto(name);
     }
 
@@ -202,7 +203,6 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
         @Override
         protected void onProgressUpdate(Boolean... values) {
             super.onProgressUpdate(values);
-            mAnalysisView.displayProgress(mIsActive);
         }
 
         @Override
@@ -284,10 +284,15 @@ public class AnalysisPresenter implements PresenterViewContract.Operations, Pres
             mIsActive = false;
 
             long difference = System.currentTimeMillis() - startTime;
-            Log.d(TAG, "onPostExecute - Reponse = " + result + "(" + difference / 1000 + " s)");
+            Log.i(TAG, "onPostExecute - Reponse = " + result + "(" + difference / 1000 + " s)");
 
             getPhotoOnServerWithSimilarRotation(result);
         }
     }
 
+
+    @Override
+    public void retrieveMkgMatchingImage(MatchingImage image) {
+        mAnalysisView.retrieveMatchingImage(image);
+    }
 }

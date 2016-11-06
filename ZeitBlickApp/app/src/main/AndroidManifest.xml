@@ -7,8 +7,6 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
-    <!--    Pour ecrire l'image dans un storage  cf:
-    http://stackoverflow.com/questions/23527767/open-failed-eacces-permission-denied    -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -27,4 +25,14 @@
         </activity>
     </application>
 
+
+    <!-- facebook -->
+    <meta-data
+        android:name="com.facebook.sdk.ApplicationId"
+        android:value="@string/facebook_app_id" />
+
+    <provider
+        android:name="com.facebook.FacebookContentProvider"
+        android:authorities="com.facebook.app.FacebookContentProvider153002768499630"
+        android:exported="true" />
 </manifest>

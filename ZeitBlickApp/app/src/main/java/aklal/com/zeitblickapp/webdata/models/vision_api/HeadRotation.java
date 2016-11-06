@@ -1,4 +1,4 @@
-package aklal.com.zeitblickapp.webdata.models;
+package aklal.com.zeitblickapp.webdata.models.vision_api;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Created by Aklal on 12.10.16.
+ * Created by oliver on 12.10.16.
  * <p>
  * Define POJO object to be converted in json when using retrofit calls
  */
