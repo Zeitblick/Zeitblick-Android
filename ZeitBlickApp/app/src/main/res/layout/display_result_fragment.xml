@@ -14,16 +14,14 @@
         android:layout_gravity="center"
         android:indeterminate="true" />
 
-    <!--android:fillViewport 	Defines whether the scrollview should stretch its content to fill the viewport.-->
-    <HorizontalScrollView
+    <!--android:fillViewport
+    Defines whether the scrollview should stretch its content to fill the viewport.-->
+    <aklal.com.zeitblickapp.view.util.CustomHorizontalScrollView
+        android:id="@+id/hsv_matching_mkg_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:scrollbars="horizontal"
-        android:scrollbarSize="50dp"
-        android:scrollbarAlwaysDrawVerticalTrack="true"
-        android:scrollbarAlwaysDrawHorizontalTrack="true"
-        android:scrollbarStyle="insideOverlay">
+        android:scrollbars="horizontal">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -37,7 +35,7 @@
                 android:layout_width="match_parent"
                 android:background="@drawable/used_animation_intro"/>
         </LinearLayout>
-    </HorizontalScrollView>
+    </aklal.com.zeitblickapp.view.util.CustomHorizontalScrollView>
 
 
     <!-- layout bas de page (bouton information + photo + bouton "+" -->
@@ -48,8 +46,6 @@
         android:layout_gravity="bottom"
         android:layout_marginBottom="@dimen/layout_button_photo_margin_bottom"
         android:orientation="horizontal">
-        <!--android:layout_below="@id/iv_taken_photo"-->
-
         <!-- Button information -->
         <ImageButton
             android:id="@+id/btt_information"
@@ -63,8 +59,6 @@
             android:cropToPadding="false"
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_info_v2" />
-
-        <!--app:srcCompat="@drawable/ic_info_outline_48px"-->
 
 
         <!-- Button "+" -->
@@ -80,8 +74,6 @@
             android:cropToPadding="false"
             android:scaleType="centerCrop"
             app:srcCompat="@mipmap/ic_plus_v2" />
-
-        <!--app:srcCompat="@drawable/ic_plus_circle_outline"-->
 
 
         <de.hdodenhof.circleimageview.CircleImageView

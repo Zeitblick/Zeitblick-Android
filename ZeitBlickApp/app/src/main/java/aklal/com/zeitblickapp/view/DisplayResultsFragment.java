@@ -11,6 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -29,6 +32,7 @@ import aklal.com.zeitblickapp.MainActivity;
 import aklal.com.zeitblickapp.R;
 import aklal.com.zeitblickapp.presenter.AnalysisPresenter;
 import aklal.com.zeitblickapp.presenter.PresenterViewContract;
+import aklal.com.zeitblickapp.view.util.CustomHorizontalScrollView;
 import aklal.com.zeitblickapp.webdata.models.matching_image.MatchingImage;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,7 +40,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static aklal.com.zeitblickapp.R.drawable.error_image;
+import static aklal.com.zeitblickapp.R.drawable.error_image_v2;
 
 /**
  * Created by Aklal on 10.10.16.
@@ -60,6 +64,11 @@ public class DisplayResultsFragment
 
     @BindView(R.id.btt_information)
     ImageButton mBttInformation;
+
+    @BindView(R.id.hsv_matching_mkg_photo)
+    CustomHorizontalScrollView mHsvMatchingPhoto;
+
+    private boolean isEverythingOk;
 
     private Context mContext;
 
@@ -115,7 +124,7 @@ public class DisplayResultsFragment
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.display_result, container, false);
+        View view = inflater.inflate(R.layout.display_result_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         mIvSubmittedPhoto = (CircleImageView) view.findViewById(R.id.iv_thumbnail_taken_photo);
@@ -201,6 +210,8 @@ public class DisplayResultsFragment
                 //Stop the animation to be able to display image result
                 mWaitingAnimation.stop();
 
+                isEverythingOk = true;
+
                 mBitmapByteArray = convertBitmapToByteArray(loadedImage);
             }
 
@@ -219,16 +230,33 @@ public class DisplayResultsFragment
 
     @Override
     public void displayError() {
+        isEverythingOk = false;
+
         mProgressBar.setVisibility(ProgressBar.INVISIBLE);
 
-        //Stop the animation to be able to display image result
+        //Stop the animation
         mWaitingAnimation.stop();
 
-        ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(error_image));
-        ivMatchingMkgPhoto.setLayoutParams(
-                new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.MATCH_PARENT));
-        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        // Disable scrolling on our custom horizontalscrollview
+        mHsvMatchingPhoto.setScrollingEnabled(false);
+
+        ivMatchingMkgPhoto.setImageDrawable(getResources().getDrawable(error_image_v2));
+        ivMatchingMkgPhoto.setScaleType(ImageView.ScaleType.MATRIX);//image is quasi perfect (dimension and position)!!! but container is too big and one can scrolling  (outside of the image there is background)
+
+        // Animate option button to rotate to 45° and become a close button
+        Animation anim = AnimationUtils.loadAnimation(getContext(), R.anim.option_to_close_anim);
+        anim.setDuration(400);
+        anim.setFillAfter(true);
+        mBttOptions.startAnimation(anim);//button keeps its final state
+        mBttOptions.setClickable(true);
+
+
+        // Animate information button to let it disappear
+        Animation animAlpha = new AlphaAnimation(1.0f, 0.0f);
+        animAlpha.setDuration(1000);
+        animAlpha.setFillAfter(true);
+        mBttInformation.startAnimation(animAlpha);
+        mBttInformation.setClickable(false);
 
         Toast.makeText(mContext,
                 getResources().getString(R.string.message_error), Toast.LENGTH_LONG)
@@ -247,10 +275,17 @@ public class DisplayResultsFragment
      **/
     @OnClick(R.id.btt_options)
     public void onOptionsClicked(){
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container,
-                        OptionsTransparentFragment.newInstance(mSelfieStringUri, mBitmapByteArray))
-                .commit();
+        if (isEverythingOk) {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container,
+                            OptionsTransparentFragment.newInstance(mSelfieStringUri, mBitmapByteArray))
+                    .commit();
+        } else {
+            getActivity().getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container,
+                            TakePhotoFragment.newInstance())
+                    .commit();
+        }
     }
 
     @OnClick(R.id.btt_information)

@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 
 import aklal.com.zeitblickapp.MainActivity;
 import aklal.com.zeitblickapp.R;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -27,6 +29,13 @@ public class PresentPhotoFragment extends Fragment {
 
     private final String TAG = getClass().getSimpleName();
     private Unbinder unbinder;
+
+    @BindView(R.id.btt_los_gehts)
+    Button mBttLosGehts;
+
+    @BindView(R.id.btt_nochmal)
+    Button mBttNochmal;
+
 
     // Key of selfie uri in Fragment's args
     private static final String SELFIE_URI = "SELFIE_URI";
@@ -94,6 +103,12 @@ public class PresentPhotoFragment extends Fragment {
     @OnClick(R.id.btt_los_gehts)
     public void selfieAccepted() {
         MainActivity mainActivity = (MainActivity) getActivity();
+
+        //fixme that is an hack!! if button are not unclickable they can still capture events..
+        //fixme.. even if another fragment is displayed...
+        mBttLosGehts.setClickable(false);
+        mBttNochmal.setClickable(false);
+
         mainActivity.onAnalysisLaunched(mSelfieUri);
     }
 
